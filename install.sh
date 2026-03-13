@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # Promptster installer
 # Usage: curl -fsSL https://get.promptster.ai | sh
 # Or:    PROMPTSTER_VERSION=0.2.9 curl -fsSL https://get.promptster.ai | sh
-set -eu
+set -euo pipefail
 
 REPO="pa-arth/promptster-cli-releases"
 VERSION="${PROMPTSTER_VERSION:-latest}"
@@ -32,9 +32,9 @@ ok "${OS}/${ARCH}"
 
 printf '\033[1m[2/4]\033[0m Downloading CLI...\n'
 if command -v curl >/dev/null 2>&1; then
-  :
+  FETCH_BIN='curl -fsSL --progress-bar'
 elif command -v wget >/dev/null 2>&1; then
-  :
+  FETCH_BIN='wget -q --show-progress -O'
 else
   die "curl or wget is required"
 fi
@@ -46,13 +46,7 @@ trap cleanup EXIT
 if [ "${VERSION}" = "latest" ]; then
   URL="https://github.com/${REPO}/releases/latest/download/${ASSET}"
 else
-  VERSION_TAG="${VERSION}"
-  case "${VERSION_TAG}" in
-    cli-v*) ;;
-    v*) VERSION_TAG="cli-${VERSION_TAG}" ;;
-    *) VERSION_TAG="cli-v${VERSION_TAG}" ;;
-  esac
-  URL="https://github.com/${REPO}/releases/download/${VERSION_TAG}/${ASSET}"
+  URL="https://github.com/${REPO}/releases/download/cli-v${VERSION}/${ASSET}"
 fi
 
 if command -v curl >/dev/null 2>&1; then
@@ -79,7 +73,7 @@ case ":${PATH}:" in
     ;;
   *)
     ADDED=0
-    for RC_FILE in "${HOME}/.zshrc" "${HOME}/.zprofile" "${HOME}/.bashrc" "${HOME}/.bash_profile" "${HOME}/.profile"; do
+    for RC_FILE in "${HOME}/.zshrc" "${HOME}/.bashrc"; do
       if [ -f "${RC_FILE}" ]; then
         if grep -q '\.promptster/bin' "${RC_FILE}" 2>/dev/null; then
           ADDED=1
