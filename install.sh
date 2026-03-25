@@ -88,14 +88,13 @@ case ":${PATH}:" in
       printf '\n%s\n%s\n' "${PATH_COMMENT}" "${PATH_ENTRY}" >> "${HOME}/.bashrc"
       ok "created ${HOME}/.bashrc with PATH entry"
     fi
-    warn "restart your shell or run:"
-    warn "  export PATH=\"\${HOME}/.promptster/bin:\${PATH}\""
+    warn "run this to use promptster now (or restart your shell):"
+    warn "  source ~/.zshrc  # or: source ~/.bashrc"
     ;;
 esac
 
 printf '\n'
 printf '\033[1mPromptster installed!\033[0m\n'
 printf 'Get started:\n'
-printf '  promptster redeem PST-XXXX-XXXX\n'
-printf '  promptster start\n'
+printf '  promptster start PST-XXXX-XXXX\n'
 printf '\n'
